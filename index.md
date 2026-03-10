@@ -243,4 +243,14 @@ The experience of system administrators and support persons is also expected to 
 [^1]: If we have already published both the middle and root level certificates in the domain using the previously described method, there is no direct need for republishing. We can, however, publish the intermediate certificate by placing it in the domain NTAuthCertificates container and the root certificate with a normal domain policy, as described below. It’s actually a bit confusing, because although in theory Microsoft requires that the CA certificate that issued the card certificate belongs to the NTAuthCertificates container in the domain (check https://docs.microsoft.com/en-us/troubleshoot/windows-server/windows-security/enabling-smart-card-logon-third-party-certification-authorities), then in practice the login with the eID card works even if it hasn't been done and the chain is simply trusted. Anyway, we recommend to follow Microsoft's technical requirements when creating eID login configuration.
 [^2]: Of course, we can apply policy from any level or group we like, for only client computers for example.
 [^3]: [How Certificate Revocation Works](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/ee619754(v=ws.10))
-[^4]: If, as a rule, we have the issuer as a constant (across the chain), then the serialnumber must be changed for every user. An example Excel formula to reverse the serial number string (where B4 is the cell with the original serial number): `=CONCAT(MID(B4;31;2);MID(B4;29;2);MID(B4;27;2);MID(B4;25;2);MID(B4;23;2);MID(B4;21;2);MID(B4;19;2);MID(B4;17;2);MID(B4;15;2);MID(B4;13;2);MID(B4;11;2);MID(B4;9;2);MID(B4;7;2);MID(B4;5;2);MID(B4;3;2);MID(B4;1;2))`
+[^4]: If, as a rule, we have the issuer as a constant (across the chain), then the serialnumber must be changed for every user. Use this PowerShell function:
+
+    ```powershell
+    function Reverse-SerialNumber { param([string]$SerialNumber)
+      $pairs = [regex]::Matches($SerialNumber, '..').Value;
+      [array]::Reverse($pairs);
+      return -join $pairs
+    }
+    Reverse-SerialNumber -SerialNumber "8958ee38a565845e9107720de61ca64d"
+    # Output: 4da61ce60d7207915e8465a538ee5889
+    ```

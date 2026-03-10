@@ -244,4 +244,14 @@ Administraatorite ja kasutajatoe vaade on arvatavasti samuti positiivne, kuna li
 [^1]: Kui oleme eelnevalt kirjeldatud meetodil nii kesk- kui juurtaseme sertifikaadid juba domeenis publitseerinud, puudub selleks küll otsene vajadus. Saame samas näiteks kesktaseme sertifikaadi publitseerida domeeni NTAuthCertificates konteinerisse paigutamisega ja juurtaseme sertifikaadi tavalise domeeni poliitikaga, nagu kirjeldatud allpool. Sellega on lugu tegelikult üldse natuke segane, sest kuigi teoreetiliselt Microsoft nõuab, et kaardi sertifikaadi väljastanud CA sertifikaat kuuluks domeeni NTAuthCertificates konteinerisse (vt. https://docs.microsoft.com/en-us/troubleshoot/windows-server/windows-security/enabling-smart-card-logon-third-party-certification-authorities), siis praktikas töötab eID kaardiga login ka siis, kui seda pole tehtud ja ahel on lihtsalt usaldatud. Siiski soovitame konfiguratsiooni luues järgida Microsofti tehnilisi nõudeid.
 [^2]: Muidugi võime vastava poliitika rakendada ka ainult klientarvutite ja/või serverite OU baasilt või mõnel muul loogikal baseeruvalt.
 [^3]: [How Certificate Revocation Works](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/ee619754(v=ws.10))
-[^4]: Kui issuer on meil reeglina konstant, siis serialnumber tuleb ümber pöörata kõikidel kasutajatel. Kindlasti on siin mitmeid automatiseerimise meetmeid, ent näitena toon siia Exceli võimaluse selle muudatuse tegemiseks: `=CONCAT(MID(B4;31;2);MID(B4;29;2);MID(B4;27;2);MID(B4;25;2);MID(B4;23;2);MID(B4;21;2);MID(B4;19;2);MID(B4;17;2);MID(B4;15;2);MID(B4;13;2);MID(B4;11;2);MID(B4;9;2);MID(B4;7;2);MID(B4;5;2);MID(B4;3;2);MID(B4;1;2))`, kus B4 on siis lahtriks, kus algne seerianumber paikneb.
+[^4]: Kui issuer on meil reeglina konstant, siis serialnumber tuleb ümber pöörata kõikidel kasutajatel. Kasutage selle PowerShelli funktsiooni:
+
+    ```powershell
+    function Reverse-SerialNumber { param([string]$SerialNumber)
+      $pairs = [regex]::Matches($SerialNumber, '..').Value;
+      [array]::Reverse($pairs);
+      return -join $pairs
+    }
+    Reverse-SerialNumber -SerialNumber "8958ee38a565845e9107720de61ca64d"
+    # Väljund: 4da61ce60d7207915e8465a538ee5889
+    ```
