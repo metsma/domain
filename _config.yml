@@ -1,5 +1,6 @@
-theme: jekyll-theme-minimal
+remote_theme: just-the-docs/just-the-docs
 title: Estonian eID Windows Domain Auth
 description: Technical documentation for implementing Estonian eID card authentication in Windows environments.
-show_downloads: true
 google_analytics:
+layout: minimal
+nav_enabled: false

@@ -7,6 +7,8 @@ See dokument pakub põhjalikku tehnilist ülevaadet ja samm-sammulisi juhiseid s
 **Versioon:** 25.10/1
 
 ---
+- TOC
+{:toc}
 
 ## Versiooni info
 
